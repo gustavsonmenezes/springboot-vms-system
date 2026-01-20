@@ -2,6 +2,11 @@ package com.example.vmssystem.controller;
 
 import com.example.vmssystem.entity.VirtualMachine;
 import com.example.vmssystem.repository.VMRepository;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,6 +24,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/vms")
 @CrossOrigin(origins = "http://localhost:4200")
+@Tag(name = "Máquinas Virtuais", description = "Operações CRUD para gerenciamento de máquinas virtuais")
 public class VMController {
 
     @Autowired
@@ -26,13 +32,32 @@ public class VMController {
 
     // 1. LISTAR TODAS AS VMs
     @GetMapping
+    @Operation(
+            summary = "Listar todas as máquinas virtuais",
+            description = "Retorna uma lista com todas as VMs cadastradas no sistema"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Lista retornada com sucesso"),
+            @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
+    })
     public List<VirtualMachine> getAllVMs() {
         return vmRepository.findAll();
     }
 
     // 2. BUSCAR VM POR ID
     @GetMapping("/{id}")
-    public ResponseEntity<VirtualMachine> getVMById(@PathVariable Long id) {
+    @Operation(
+            summary = "Buscar máquina virtual por ID",
+            description = "Retorna os detalhes de uma máquina virtual específica"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "VM encontrada"),
+            @ApiResponse(responseCode = "404", description = "VM não encontrada"),
+            @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
+    })
+    public ResponseEntity<VirtualMachine> getVMById(
+            @Parameter(description = "ID da máquina virtual", example = "1", required = true)
+            @PathVariable Long id) {
         Optional<VirtualMachine> vm = vmRepository.findById(id);
         return vm.map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
@@ -40,10 +65,21 @@ public class VMController {
 
     // 3. CRIAR NOVA VM
     @PostMapping
-    public ResponseEntity<?> createVM(@Valid @RequestBody VirtualMachine vm,
-                                      BindingResult result) {
+    @Operation(
+            summary = "Criar nova máquina virtual",
+            description = "Cadastra uma nova máquina virtual no sistema"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "VM criada com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Dados inválidos fornecidos"),
+            @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
+    })
+    public ResponseEntity<?> createVM(
+            @Parameter(description = "Dados da máquina virtual a ser criada", required = true)
+            @Valid @RequestBody VirtualMachine vm,
+            BindingResult result) {
 
-
+        // Verifica erros de validação
         if (result.hasErrors()) {
             Map<String, String> errors = new HashMap<>();
             for (FieldError error : result.getFieldErrors()) {
@@ -52,7 +88,7 @@ public class VMController {
             return ResponseEntity.badRequest().body(errors);
         }
 
-
+        // Define data e status padrão
         vm.setDataCriacao(LocalDateTime.now());
         if (vm.getStatus() == null) {
             vm.setStatus("STOPPED");
@@ -62,11 +98,24 @@ public class VMController {
         return ResponseEntity.status(HttpStatus.CREATED).body(savedVM);
     }
 
-
+    // 4. ATUALIZAR VM
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateVM(@PathVariable Long id,
-                                      @Valid @RequestBody VirtualMachine vmDetails,
-                                      BindingResult result) {
+    @Operation(
+            summary = "Atualizar máquina virtual",
+            description = "Atualiza os dados de uma máquina virtual existente"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "VM atualizada com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Dados inválidos fornecidos"),
+            @ApiResponse(responseCode = "404", description = "VM não encontrada"),
+            @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
+    })
+    public ResponseEntity<?> updateVM(
+            @Parameter(description = "ID da máquina virtual a ser atualizada", example = "1", required = true)
+            @PathVariable Long id,
+            @Parameter(description = "Novos dados da máquina virtual", required = true)
+            @Valid @RequestBody VirtualMachine vmDetails,
+            BindingResult result) {
 
         if (result.hasErrors()) {
             Map<String, String> errors = new HashMap<>();
@@ -85,10 +134,31 @@ public class VMController {
         return ResponseEntity.ok(updatedVM);
     }
 
-
+    // 5. MUDAR STATUS (START/STOP/SUSPEND)
     @PutMapping("/{id}/{acao}")
-    public ResponseEntity<?> changeStatus(@PathVariable Long id,
-                                          @PathVariable String acao) {
+    @Operation(
+            summary = "Alterar status da máquina virtual",
+            description = "Altera o status de uma máquina virtual (start, stop ou suspend)"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Status alterado com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Ação inválida fornecida"),
+            @ApiResponse(responseCode = "404", description = "VM não encontrada"),
+            @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
+    })
+    public ResponseEntity<?> changeStatus(
+            @Parameter(description = "ID da máquina virtual", example = "1", required = true)
+            @PathVariable Long id,
+            @Parameter(
+                    description = "Ação a ser realizada",
+                    example = "start",
+                    required = true,
+                    schema = @io.swagger.v3.oas.annotations.media.Schema(
+                            type = "string",
+                            allowableValues = {"start", "stop", "suspend"}
+                    )
+            )
+            @PathVariable String acao) {
 
         Optional<VirtualMachine> vmOptional = vmRepository.findById(id);
         if (vmOptional.isEmpty()) {
@@ -122,9 +192,20 @@ public class VMController {
         ));
     }
 
-
+    // 6. DELETAR VM
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteVM(@PathVariable Long id) {
+    @Operation(
+            summary = "Excluir máquina virtual",
+            description = "Remove uma máquina virtual do sistema"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "VM excluída com sucesso"),
+            @ApiResponse(responseCode = "404", description = "VM não encontrada"),
+            @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
+    })
+    public ResponseEntity<?> deleteVM(
+            @Parameter(description = "ID da máquina virtual a ser excluída", example = "1", required = true)
+            @PathVariable Long id) {
         if (!vmRepository.existsById(id)) {
             return ResponseEntity.notFound().build();
         }
