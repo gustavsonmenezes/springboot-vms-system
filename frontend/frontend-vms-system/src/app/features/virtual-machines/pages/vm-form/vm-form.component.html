@@ -1,0 +1,124 @@
+<div class="container">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>{{ title }}</mat-card-title>
+      <mat-card-subtitle>
+        {{ isEditMode ? 'Atualize os dados da máquina virtual' : 'Preencha os dados para criar uma nova máquina virtual' }}
+      </mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <div *ngIf="loading" class="loading-spinner">
+        <mat-spinner diameter="50"></mat-spinner>
+        <p>Carregando dados da máquina virtual...</p>
+      </div>
+
+      <form [formGroup]="vmForm" (ngSubmit)="onSubmit()" *ngIf="!loading">
+        <div class="form-grid">
+          <!-- Nome -->
+          <div class="form-field">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Nome da Máquina Virtual</mat-label>
+              <input matInput formControlName="name" placeholder="Ex: Servidor Web">
+              <mat-icon matPrefix>computer</mat-icon>
+              <mat-error *ngIf="name?.hasError('required')">
+                Nome é obrigatório
+              </mat-error>
+              <mat-error *ngIf="name?.hasError('minlength')">
+                Nome deve ter pelo menos 3 caracteres
+              </mat-error>
+              <mat-error *ngIf="name?.hasError('maxlength')">
+                Nome não pode exceder 100 caracteres
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <!-- CPU -->
+          <div class="form-field">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>CPU (núcleos)</mat-label>
+              <input matInput type="number" formControlName="cpu" min="1" max="32">
+              <mat-icon matPrefix>memory</mat-icon>
+              <mat-error *ngIf="cpu?.hasError('required')">
+                CPU é obrigatória
+              </mat-error>
+              <mat-error *ngIf="cpu?.hasError('min')">
+                Mínimo 1 núcleo
+              </mat-error>
+              <mat-error *ngIf="cpu?.hasError('max')">
+                Máximo 32 núcleos
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <!-- Memória -->
+          <div class="form-field">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Memória (GB)</mat-label>
+              <input matInput type="number" formControlName="memory" min="1" max="256">
+              <mat-icon matPrefix>sd_card</mat-icon>
+              <mat-error *ngIf="memory?.hasError('required')">
+                Memória é obrigatória
+              </mat-error>
+              <mat-error *ngIf="memory?.hasError('min')">
+                Mínimo 1 GB
+              </mat-error>
+              <mat-error *ngIf="memory?.hasError('max')">
+                Máximo 256 GB
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <!-- Disco -->
+          <div class="form-field">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Disco (GB)</mat-label>
+              <input matInput type="number" formControlName="disk" min="10" max="2048">
+              <mat-icon matPrefix>storage</mat-icon>
+              <mat-error *ngIf="disk?.hasError('required')">
+                Disco é obrigatório
+              </mat-error>
+              <mat-error *ngIf="disk?.hasError('min')">
+                Mínimo 10 GB
+              </mat-error>
+              <mat-error *ngIf="disk?.hasError('max')">
+                Máximo 2048 GB (2TB)
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <!-- Status (apenas em edição) -->
+          <div class="form-field" *ngIf="isEditMode">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Status</mat-label>
+              <mat-select formControlName="status">
+                <mat-option *ngFor="let status of statusOptions" [value]="status.value">
+                  {{ status.label }}
+                </mat-option>
+              </mat-select>
+              <mat-error *ngIf="status?.hasError('required')">
+                Status é obrigatório
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button mat-button type="button" routerLink="/vms">
+            Cancelar
+          </button>
+          <button mat-raised-button color="primary" type="submit" 
+                  [disabled]="vmForm.invalid || submitting">
+            <span *ngIf="submitting" class="button-content">
+              <mat-spinner diameter="20" class="button-spinner"></mat-spinner>
+              {{ isEditMode ? 'Atualizando...' : 'Criando...' }}
+            </span>
+            <span *ngIf="!submitting" class="button-content">
+              {{ isEditMode ? 'Atualizar' : 'Criar' }}
+            </span>
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>
