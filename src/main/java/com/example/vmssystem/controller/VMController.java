@@ -1,15 +1,15 @@
 package com.example.vmssystem.controller;
 
-import com.example.vmssystem.dto.VMRequestDTO; // Importação alterada
-import com.example.vmssystem.dto.VMResponseDTO; // Importação adicionada
-import com.example.vmssystem.service.VMService; // Importação adicionada
+import com.example.vmssystem.dto.VMRequestDTO;
+import com.example.vmssystem.dto.VMResponseDTO;
+import com.example.vmssystem.service.VMService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor; // Importação adicionada
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,12 +18,12 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/vms" )
-@CrossOrigin(origins = "*") // Permite acesso de qualquer origem (para desenvolvimento)
-@RequiredArgsConstructor // NOVO: Injeção de dependência via construtor (melhor prática)
+@CrossOrigin(origins = "*")
+@RequiredArgsConstructor
 @Tag(name = "Máquinas Virtuais", description = "Operações CRUD para gerenciamento de máquinas virtuais")
 public class VMController {
 
-    private final VMService vmService; // Injeção de dependência
+    private final VMService vmService;
 
     @GetMapping
     @Operation(summary = "Listar todas as máquinas virtuais")
