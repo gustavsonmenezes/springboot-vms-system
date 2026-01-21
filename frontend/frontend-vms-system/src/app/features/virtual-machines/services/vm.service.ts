@@ -32,10 +32,7 @@ export class VirtualMachineService {
   }
 
   changeVMStatus(id: number, action: VMAction): Observable<VirtualMachine> {
-    return this.apiService.post<VirtualMachine>(
-      `${this.endpoint}/${id}/status`,
-      action
-    );
+    return this.apiService.put<VirtualMachine>(`${this.endpoint}/${id}/${action.action}`, {});
   }
 
   getAllTasks(): Observable<Task[]> {

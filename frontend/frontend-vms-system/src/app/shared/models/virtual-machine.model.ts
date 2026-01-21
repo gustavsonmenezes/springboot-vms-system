@@ -1,11 +1,11 @@
 export interface VirtualMachine {
   id?: number;
-  name: string;
+  nome: string;
   cpu: number;
-  memory: number;
-  disk: number;
+  memoria: number;
+  disco: number;
   status: VMStatus;
-  createdAt?: Date;
+  dataCriacao?: Date;
 }
 
 export enum VMStatus {

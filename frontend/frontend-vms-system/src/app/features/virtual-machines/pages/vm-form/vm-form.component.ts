@@ -65,7 +65,7 @@ export class VmFormComponent implements OnInit {
 
   createForm(): FormGroup {
     return this.fb.group({
-      name: ['', [
+      nome: ['', [
         Validators.required,
         Validators.minLength(3),
         Validators.maxLength(100)
@@ -75,12 +75,12 @@ export class VmFormComponent implements OnInit {
         Validators.min(1),
         Validators.max(32)
       ]],
-      memory: ['', [
+      memoria: ['', [
         Validators.required,
         Validators.min(1),
         Validators.max(256)
       ]],
-      disk: ['', [
+      disco: ['', [
         Validators.required,
         Validators.min(10),
         Validators.max(2048)
@@ -150,12 +150,10 @@ export class VmFormComponent implements OnInit {
     });
   }
 
-  get name() {
-    return this.vmForm.get('name');
-    }
+  get nome() { return this.vmForm.get('nome'); }
   get cpu() { return this.vmForm.get('cpu'); }
-  get memory() { return this.vmForm.get('memory'); }
-  get disk() { return this.vmForm.get('disk'); }
+  get memoria() { return this.vmForm.get('memoria'); }
+  get disco() { return this.vmForm.get('disco'); }
   get status() { return this.vmForm.get('status'); }
 
   get title(): string {

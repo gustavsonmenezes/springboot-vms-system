@@ -19,15 +19,15 @@
           <div class="form-field">
             <mat-form-field appearance="outline" class="full-width">
               <mat-label>Nome da Máquina Virtual</mat-label>
-              <input matInput formControlName="name" placeholder="Ex: Servidor Web">
+              <input matInput formControlName="nome" placeholder="Ex: Servidor Web">
               <mat-icon matPrefix>computer</mat-icon>
-              <mat-error *ngIf="name?.hasError('required')">
+              <mat-error *ngIf="nome?.hasError('required')">
                 Nome é obrigatório
               </mat-error>
-              <mat-error *ngIf="name?.hasError('minlength')">
+              <mat-error *ngIf="nome?.hasError('minlength')">
                 Nome deve ter pelo menos 3 caracteres
               </mat-error>
-              <mat-error *ngIf="name?.hasError('maxlength')">
+              <mat-error *ngIf="nome?.hasError('maxlength')">
                 Nome não pode exceder 100 caracteres
               </mat-error>
             </mat-form-field>
@@ -55,15 +55,15 @@
           <div class="form-field">
             <mat-form-field appearance="outline" class="full-width">
               <mat-label>Memória (GB)</mat-label>
-              <input matInput type="number" formControlName="memory" min="1" max="256">
+              <input matInput type="number" formControlName="memoria" min="1" max="256">
               <mat-icon matPrefix>sd_card</mat-icon>
-              <mat-error *ngIf="memory?.hasError('required')">
+              <mat-error *ngIf="memoria?.hasError('required')">
                 Memória é obrigatória
               </mat-error>
-              <mat-error *ngIf="memory?.hasError('min')">
+              <mat-error *ngIf="memoria?.hasError('min')">
                 Mínimo 1 GB
               </mat-error>
-              <mat-error *ngIf="memory?.hasError('max')">
+              <mat-error *ngIf="memoria?.hasError('max')">
                 Máximo 256 GB
               </mat-error>
             </mat-form-field>
@@ -73,15 +73,15 @@
           <div class="form-field">
             <mat-form-field appearance="outline" class="full-width">
               <mat-label>Disco (GB)</mat-label>
-              <input matInput type="number" formControlName="disk" min="10" max="2048">
+              <input matInput type="number" formControlName="disco" min="10" max="2048">
               <mat-icon matPrefix>storage</mat-icon>
-              <mat-error *ngIf="disk?.hasError('required')">
+              <mat-error *ngIf="disco?.hasError('required')">
                 Disco é obrigatório
               </mat-error>
-              <mat-error *ngIf="disk?.hasError('min')">
+              <mat-error *ngIf="disco?.hasError('min')">
                 Mínimo 10 GB
               </mat-error>
-              <mat-error *ngIf="disk?.hasError('max')">
+              <mat-error *ngIf="disco?.hasError('max')">
                 Máximo 2048 GB (2TB)
               </mat-error>
             </mat-form-field>
@@ -107,7 +107,7 @@
           <button mat-button type="button" routerLink="/vms">
             Cancelar
           </button>
-          <button mat-raised-button color="primary" type="submit" 
+          <button mat-raised-button color="primary" type="submit"
                   [disabled]="vmForm.invalid || submitting">
             <span *ngIf="submitting" class="button-content">
               <mat-spinner diameter="20" class="button-spinner"></mat-spinner>

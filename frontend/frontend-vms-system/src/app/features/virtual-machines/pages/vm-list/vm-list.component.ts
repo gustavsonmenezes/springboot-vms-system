@@ -32,7 +32,7 @@ import { VirtualMachine, VMStatus } from '../../../../shared/models/virtual-mach
 export class VmListComponent implements OnInit {
   vms: VirtualMachine[] = [];
   displayedColumns: string[] = [
-    'name', 'cpu', 'memory', 'disk', 'status', 'createdAt', 'actions'
+    'nome', 'cpu', 'memoria', 'disco', 'status', 'dataCriacao', 'actions'
   ];
   loading = true;
 
