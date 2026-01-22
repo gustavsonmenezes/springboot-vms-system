@@ -1,8 +1,10 @@
 # Sistema de Cadastro de Máquinas Virtuais
 
-Bem-vindo ao VMS System! Este projeto é uma aplicação Full Stack completa desenvolvida para facilitar o cadastro, monitoramento e controle de máquinas virtuais.
-Este projeto foi construído com foco em escalabilidade, código limpo e facilidade de uso, servindo como demonstração técnica de competências em desenvolvimento moderno com Java/Spring Boot e Angular.
+O VMS System é uma aplicação Full Stack desenvolvida como desafio técnico, com o objetivo de concorrer a uma vaga de Desenvolvedor Júnior.
 
+O projeto foi criado para facilitar o cadastro, monitoramento e controle de máquinas virtuais, servindo como uma demonstração prática de competências em desenvolvimento moderno, boas práticas de arquitetura e organização de código.
+
+A aplicação foi construída com foco em escalabilidade, código limpo, manutenibilidade e facilidade de uso, utilizando tecnologias amplamente adotadas no mercado, como Java com Spring Boot no backend e Angular no frontend.
 ## 📋 Índice
 
 1. Tecnologias Utilizadas
@@ -54,7 +56,7 @@ cd backend
 ```
 
 ### Frontend
-bra um novo terminal (mantenha o do backend rodando) e navegue até a pasta do frontend:
+Abra um novo terminal (mantenha o do backend rodando) e navegue até a pasta do frontend:
 ```bash
 cd frontend/frontend-vms-system
 ```
