@@ -13,19 +13,19 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class VMRequestDTO {
 
-    @NotBlank(message = "Nome é obrigatório")
-    @Size(min = 5, message = "Nome deve ter no mínimo 5 caracteres")
+    @NotBlank(message = "O nome é obrigatório")
+    @Size(min = 5, message = "O nome deve ter pelo menos 5 caracteres")
     private String nome;
 
     @NotNull(message = "Quantidade de CPU é obrigatória")
-    @Min(value = 1, message = "CPU deve ser maior que zero")
+    @Min(value = 1, message = "A CPU deve ser um número positivo")
     private Integer cpu;
 
     @NotNull(message = "Quantidade de memória é obrigatória")
-    @Min(value = 1, message = "Memória deve ser maior que zero")
+    @Min(value = 1, message = "A memória deve ser um número positivo")
     private Integer memoria;
 
     @NotNull(message = "Tamanho do disco é obrigatório")
-    @Min(value = 1, message = "Disco deve ser maior que zero")
+    @Min(value = 1, message = "O disco deve ser um número positivo")
     private Integer disco;
 }
