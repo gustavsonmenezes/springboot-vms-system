@@ -48,16 +48,12 @@ SET status = 'RUNNING'
 WHERE id = 2;
 ```
 
-### Teste Completo da API com Swagger
-```bash
-http://localhost:8080/swagger-ui/index.html#/
-```
+## 📖 Documentação da API
 
-```bash
-get /api/vms/{id} - buscar maquina virtual por ID
-PUT /api/vms/{id} atualizar máquina virtual
-delete /api/vms/{id} excluir máquina virtual
-put /api/vms/{id}/{acao} alterar status da máquina virtual
-get /api/vms listar todas as máquinas
-post /api/vms criar nova máquina
-```
+A API está documentada com Swagger/OpenAPI 3.0.
+
+### Acessar documentação:
+- **Swagger UI:** http://localhost:8080/swagger-ui.html
+- **OpenAPI JSON:** http://localhost:8080/v3/api-docs
+
+
