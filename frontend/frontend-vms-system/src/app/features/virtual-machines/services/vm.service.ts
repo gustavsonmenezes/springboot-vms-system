@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ApiService } from '../../../core/services/api.service';
-import { VirtualMachine, VMAction, Task } from '../../../shared/models/virtual-machine.model';
+import { VirtualMachine, Task } from '../../../shared/models/virtual-machine.model';
 
 @Injectable({
   providedIn: 'root'
@@ -31,8 +31,8 @@ export class VirtualMachineService {
     return this.apiService.delete<void>(`${this.endpoint}/${id}`);
   }
 
-  changeVMStatus(id: number, action: VMAction): Observable<VirtualMachine> {
-    return this.apiService.put<VirtualMachine>(`${this.endpoint}/${id}/${action.action}`, {});
+  changeVMStatus(id: number, action: string): Observable<VirtualMachine> {
+    return this.apiService.put<VirtualMachine>(`${this.endpoint}/${id}/${action}`, {});
   }
 
   getAllTasks(): Observable<Task[]> {

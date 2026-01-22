@@ -15,14 +15,14 @@ export enum VMStatus {
   SUSPENDED = 'SUSPENDED'
 }
 
-export interface VMAction {
-  action: 'start' | 'stop' | 'suspend';
-}
-
 export interface Task {
   id?: number;
-  user: string;
-  timestamp: Date;
-  machineName: string;
+  user?: string;
+  username?: string;
+  timestamp?: Date;
+  createdAt?: string;
+  machineName?: string;
+  vmName?: string;         
   action: string;
+  vmId?: number;
 }

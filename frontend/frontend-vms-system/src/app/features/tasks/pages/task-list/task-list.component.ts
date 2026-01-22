@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatTableModule } from '@angular/material/table';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatIconModule } from '@angular/material/icon';  // ADICIONE ESTA LINHA
+import { MatIconModule } from '@angular/material/icon';
 import { VirtualMachineService } from '../../../virtual-machines/services/vm.service';
 import { Task } from '../../../../shared/models/virtual-machine.model';
 
@@ -17,7 +17,7 @@ import { Task } from '../../../../shared/models/virtual-machine.model';
     MatCardModule,
     MatTableModule,
     MatProgressSpinnerModule,
-    MatIconModule  // ADICIONE ESTA LINHA
+    MatIconModule
   ]
 })
 export class TaskListComponent implements OnInit {
@@ -32,14 +32,31 @@ export class TaskListComponent implements OnInit {
   }
 
   loadTasks(): void {
+    console.log('🔄 Iniciando carregamento de tarefas...');
     this.loading = true;
+
     this.vmService.getAllTasks().subscribe({
       next: (data) => {
+        console.log('=== DADOS DO BACKEND ===');
+        console.log('Total de tarefas:', data.length);
+        console.log('Dados completos:', JSON.stringify(data, null, 2));
+
+        if (data.length > 0) {
+          const primeira = data[0];
+          console.log('Primeira tarefa:');
+          console.log('- Usuário:', primeira.username);
+          console.log('- Ação:', primeira.action);
+          console.log('- VM:', primeira.vmName);
+          console.log('- Data (raw):', primeira.createdAt || primeira.timestamp);
+          console.log('- Tipo:', typeof (primeira.createdAt || primeira.timestamp));
+        }
+
         this.tasks = data;
         this.loading = false;
+        console.log('✅ Tarefas carregadas com sucesso!');
       },
       error: (error) => {
-        console.error('Error loading tasks:', error);
+        console.error('❌ ERRO ao carregar tarefas:', error);
         this.loading = false;
       }
     });

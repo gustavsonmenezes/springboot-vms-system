@@ -5,9 +5,9 @@ import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table';
-import { MatChipsModule } from '@angular/material/chips';  // ADICIONE ESTA LINHA
+import { MatChipsModule } from '@angular/material/chips';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatTooltipModule } from '@angular/material/tooltip';  // ADICIONE ESTA LINHA
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { ToastrService } from 'ngx-toastr';
 import { VirtualMachineService } from '../../services/vm.service';
 import { VirtualMachine, VMStatus } from '../../../../shared/models/virtual-machine.model';
@@ -76,7 +76,7 @@ export class VmListComponent implements OnInit {
   }
 
   changeStatus(vmId: number, action: 'start' | 'stop' | 'suspend'): void {
-    this.vmService.changeVMStatus(vmId, { action }).subscribe({
+    this.vmService.changeVMStatus(vmId, action).subscribe({
       next: () => {
         this.toastr.success(`Máquina ${action === 'start' ? 'iniciada' : action === 'stop' ? 'parada' : 'suspensa'} com sucesso!`);
         this.loadVMs();

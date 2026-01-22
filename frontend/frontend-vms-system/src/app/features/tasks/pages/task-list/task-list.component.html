@@ -1,6 +1,6 @@
 <div class="container">
   <h1>Histórico de Tarefas</h1>
-  
+
   <mat-card>
     <mat-card-content>
       <div *ngIf="loading" class="loading-spinner">
@@ -22,7 +22,7 @@
             <td mat-cell *matCellDef="let task">
               <div class="user-cell">
                 <mat-icon>person</mat-icon>
-                <span>{{ task.user }}</span>
+                <span>{{ task.username || task.user || 'N/A' }}</span>
               </div>
             </td>
           </ng-container>
@@ -31,7 +31,13 @@
           <ng-container matColumnDef="timestamp">
             <th mat-header-cell *matHeaderCellDef> Data/Hora </th>
             <td mat-cell *matCellDef="let task">
-              {{ formatDate(task.timestamp) }}
+              <!-- Pipe do Angular com fallback -->
+              <span *ngIf="task.createdAt | date:'dd/MM/yyyy HH:mm:ss'">
+                {{ task.createdAt | date:'dd/MM/yyyy HH:mm:ss' }}
+              </span>
+              <span *ngIf="!(task.createdAt | date:'dd/MM/yyyy HH:mm:ss')" class="error-date">
+                {{ task.createdAt }} (raw)
+              </span>
             </td>
           </ng-container>
 
@@ -41,7 +47,7 @@
             <td mat-cell *matCellDef="let task">
               <div class="machine-cell">
                 <mat-icon>computer</mat-icon>
-                <span>{{ task.machineName }}</span>
+                <span>{{ task.vmName || task.machineName || 'N/A' }}</span>
               </div>
             </td>
           </ng-container>

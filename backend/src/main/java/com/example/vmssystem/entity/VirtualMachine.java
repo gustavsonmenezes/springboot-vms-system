@@ -16,8 +16,8 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor 
-@Builder // NOVO: Padrão de projeto Builder
-@EntityListeners(AuditingEntityListener.class) // NOVO: Habilita a auditoria JPA
+@Builder
+@EntityListeners(AuditingEntityListener.class)
 public class VirtualMachine {
 
     @Id
@@ -40,7 +40,7 @@ public class VirtualMachine {
     @Column(name = "data_criacao", nullable = false, updatable = false)
     private LocalDateTime dataCriacao;
 
-    @Enumerated(EnumType.STRING) // NOVO: Persiste o Enum como String
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private VMStatus status;
 }

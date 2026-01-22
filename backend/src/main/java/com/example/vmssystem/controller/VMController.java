@@ -67,9 +67,13 @@ public class VMController {
     @PutMapping("/{id}/{acao}")
     @Operation(summary = "Alterar status da máquina virtual")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Status alterado com sucesso"),
-            @ApiResponse(responseCode = "400", description = "Ação inválida"),
-            @ApiResponse(responseCode = "404", description = "VM não encontrada")
+            @ApiResponse(responseCode = "200",
+                    description = "Status alterado com sucesso"),
+
+            @ApiResponse(responseCode = "400",
+                    description = "Ação inválida"),
+            @ApiResponse(responseCode = "404",
+                    description = "VM não encontrada")
     })
     public ResponseEntity<VMResponseDTO> changeStatus(
             @PathVariable Long id,
