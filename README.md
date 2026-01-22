@@ -24,9 +24,6 @@ Este projeto foi construído com foco em escalabilidade, código limpo e facilid
 | **Frontend** | Angular 19 | Framework moderno para interfaces reativas. |
 | **Documentação** | Swagger (OpenAPI 3.0) | Interface interativa para testes de API. |
 
-## Tecnologias
-- Backend: Java 17, Spring Boot, PostgreSQL
-- Frontend: Angular 19
 
 ## 📌 Pré-requisitos
 
