@@ -1,16 +1,24 @@
 import { Routes } from '@angular/router';
+import { authGuard } from './core/guards/auth.guard';
 
 export const routes: Routes = [
-  { path: '', redirectTo: '/vms', pathMatch: 'full' },
+  { path: '', redirectTo: '/login', pathMatch: 'full' },
+  {
+    path: 'login',
+    loadChildren: () => import('./features/auth/auth.routes')
+      .then(m => m.authRoutes)
+  },
   {
     path: 'vms',
     loadChildren: () => import('./features/virtual-machines/virtual-machines.routes')
-      .then(m => m.VIRTUAL_MACHINES_ROUTES)
+      .then(m => m.VIRTUAL_MACHINES_ROUTES),
+    canActivate: [authGuard]
   },
   {
     path: 'tasks',
     loadChildren: () => import('./features/tasks/tasks.routes')
-      .then(m => m.TASKS_ROUTES)
+      .then(m => m.TASKS_ROUTES),
+    canActivate: [authGuard]
   },
-  { path: '**', redirectTo: '/vms' }
+  { path: '**', redirectTo: '/login' }
 ];
