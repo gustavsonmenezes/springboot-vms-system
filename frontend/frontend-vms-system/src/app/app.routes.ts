@@ -8,6 +8,7 @@ export const routes: Routes = [
     loadChildren: () => import('./features/auth/auth.routes')
       .then(m => m.authRoutes)
   },
+
   {
     path: 'vms',
     loadChildren: () => import('./features/virtual-machines/virtual-machines.routes')
