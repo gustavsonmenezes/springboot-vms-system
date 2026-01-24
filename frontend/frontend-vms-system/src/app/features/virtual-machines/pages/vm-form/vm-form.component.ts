@@ -26,7 +26,7 @@ import { VirtualMachine, VMStatus } from '../../../../shared/models/virtual-mach
     MatButtonModule,
     MatSelectModule,
     MatProgressSpinnerModule,
-    MatIconModule  // ADICIONE ESTA LINHA
+    MatIconModule
   ]
 })
 export class VmFormComponent implements OnInit {
@@ -99,7 +99,9 @@ export class VmFormComponent implements OnInit {
       error: (error) => {
         this.toastr.error('Erro ao carregar máquina virtual');
         console.error('Error loading VM:', error);
-        this.router.navigate(['/vms']);
+        this.loading = false;
+        // CORRIGIDO: rota correta
+        this.router.navigate(['/virtual-machines/list']);
       }
     });
   }
@@ -118,7 +120,9 @@ export class VmFormComponent implements OnInit {
       this.vmService.updateVM(this.vmId, vmData).subscribe({
         next: () => {
           this.toastr.success('Máquina virtual atualizada com sucesso!');
-          this.router.navigate(['/vms']);
+          this.submitting = false;
+          // CORRIGIDO: rota correta
+          this.router.navigate(['/virtual-machines/list']);
         },
         error: (error) => {
           this.toastr.error('Erro ao atualizar máquina virtual');
@@ -130,7 +134,9 @@ export class VmFormComponent implements OnInit {
       this.vmService.createVM(vmData).subscribe({
         next: () => {
           this.toastr.success('Máquina virtual criada com sucesso!');
-          this.router.navigate(['/vms']);
+          this.submitting = false;
+          // CORRIGIDO: rota correta
+          this.router.navigate(['/virtual-machines/list']);
         },
         error: (error) => {
           this.toastr.error('Erro ao criar máquina virtual');

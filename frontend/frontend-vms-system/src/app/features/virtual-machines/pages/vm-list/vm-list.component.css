@@ -1,122 +1,169 @@
-.container {
-  padding: 20px;
+.page-container {
+  padding: 24px;
+  max-width: 1600px;
+  margin: 0 auto;
+}
+
+.page-header {
+  margin-bottom: 32px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 16px;
+  padding: 24px;
+  color: white;
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.header-icon {
+  font-size: 48px;
+  width: 64px;
+  height: 64px;
 }
 
 .header-actions {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 24px;
+  gap: 12px;
 }
 
-.header-actions h1 {
-  margin: 0;
-  color: #333;
+.stats-row {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
 }
 
-.loading-spinner {
+.stat-card {
+  flex: 1;
+  min-width: 200px;
+  transition: transform 0.2s;
+}
+
+.stat-card:hover {
+  transform: translateY(-4px);
+}
+
+.stat-card.running { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
+.stat-card.warning { background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); }
+
+.stat-value {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.loading-container {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 40px;
-}
-
-.loading-spinner p {
-  margin-top: 16px;
+  padding: 80px 20px;
   color: #666;
 }
 
-.empty-state {
+.empty-state-modern {
   text-align: center;
-  padding: 60px 20px;
-  color: #666;
+  padding: 80px 20px;
+  max-width: 500px;
+  margin: 0 auto;
 }
 
-.empty-state mat-icon {
-  font-size: 64px;
-  height: 64px;
-  width: 64px;
-  margin-bottom: 16px;
+.empty-icon {
+  font-size: 96px;
+  width: 128px;
+  height: 128px;
   color: #ccc;
+  margin-bottom: 24px;
 }
 
-.empty-state h3 {
-  margin: 16px 0 8px;
-  color: #444;
+.table-section {
+  background: #fafbfc;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
 }
 
-.empty-state p {
-  margin: 0;
-  color: #777;
+.table-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  gap: 16px;
 }
 
-.table-container {
-  overflow-x: auto;
-  margin-top: 16px;
+.search-field {
+  width: 300px;
 }
 
-table {
+.modern-table-container {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
+
+.modern-table {
   width: 100%;
 }
 
-th.mat-header-cell {
-  font-weight: 600;
-  color: #333;
-  background-color: #f5f5f5;
+.table-row:hover {
+  background: #f8f9ff !important;
 }
 
-td.mat-cell, th.mat-header-cell {
-  padding: 12px 16px;
-}
-
-.resource-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 4px 8px;
-  background-color: #f0f7ff;
-  border-radius: 4px;
-  color: #0066cc;
-}
-
-.resource-badge mat-icon {
-  font-size: 16px;
-  height: 16px;
-  width: 16px;
-}
-
-.action-buttons {
+.vm-name {
   display: flex;
-  gap: 4px;
-  flex-wrap: wrap;
-}
-
-.action-buttons button {
-  transition: transform 0.2s;
-}
-
-.action-buttons button:hover {
-  transform: scale(1.1);
-}
-
-.mat-chip {
+  align-items: center;
+  gap: 12px;
   font-weight: 500;
 }
 
-/* Responsividade */
-@media (max-width: 768px) {
-  .header-actions {
-    flex-direction: column;
-    gap: 16px;
-    align-items: flex-start;
-  }
+.specs-grid {
+  display: flex;
+  gap: 16px;
+}
 
-  .header-actions button {
-    width: 100%;
-  }
+.spec-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.875rem;
+  color: #666;
+}
 
-  .action-buttons {
-    justify-content: center;
-  }
+.modern-actions {
+  display: flex;
+  gap: 4px;
+}
+
+/* Status Classes */
+.status-running {
+  background-color: #d4edda !important;
+  color: #155724 !important;
+}
+
+.status-stopped {
+  background-color: #fff3cd !important;
+  color: #856404 !important;
+}
+
+.status-suspended {
+  background-color: #f8d7da !important;
+  color: #721c24 !important;
+}
+
+.status-created {
+  background-color: #d1ecf1 !important;
+  color: #0c5460 !important;
 }

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, BehaviorSubject, tap } from 'rxjs';
+import { Observable, BehaviorSubject, tap, of, delay } from 'rxjs';
 import { LoginRequest, LoginResponse, User } from '../../shared/models/auth.model';
 import { Router } from '@angular/router';
 
@@ -20,11 +20,24 @@ export class AuthService {
   }
 
   login(credentials: LoginRequest): Observable<LoginResponse> {
-    return this.http.post<LoginResponse>(`${this.apiUrl}/login`, credentials).pipe(
-      tap(response => {
-        this.setSession(response);
-      })
-    );
+    // LOGIN SIMULADO - aceita qualquer email/senha válidos
+    console.log('🔐 Login simulado com:', credentials);
+
+    const fakeResponse: LoginResponse = {
+      token: 'fake-jwt-token-' + Date.now(),
+      email: credentials.email,
+      name: credentials.email.split('@')[0]
+    };
+
+    this.setSession(fakeResponse);
+    return of(fakeResponse).pipe(delay(500)); // Simula delay da API
+
+    // DESCOMENTE quando o backend estiver pronto:
+    // return this.http.post<LoginResponse>(`${this.apiUrl}/login`, credentials).pipe(
+    //   tap(response => {
+    //     this.setSession(response);
+    //   })
+    // );
   }
 
   private setSession(authResult: LoginResponse): void {
@@ -37,6 +50,7 @@ export class AuthService {
       email: authResult.email,
       name: authResult.name
     });
+    console.log('✅ Sessão salva:', authResult);
   }
 
   logout(): void {
@@ -47,7 +61,9 @@ export class AuthService {
   }
 
   isLoggedIn(): boolean {
-    return !!localStorage.getItem('token');
+    const hasToken = !!localStorage.getItem('token');
+    console.log('🔍 Verificando login:', hasToken);
+    return hasToken;
   }
 
   getToken(): string | null {

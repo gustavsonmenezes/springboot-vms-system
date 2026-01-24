@@ -1,0 +1,83 @@
+<div class="dashboard-container">
+  <div class="header">
+    <h1>Dashboard - VMs</h1>
+    <button mat-raised-button color="primary" routerLink="/virtual-machines/list">
+      <mat-icon>list</mat-icon>
+      Ver Todas
+    </button>
+  </div>
+
+  <div *ngIf="loading" class="loading-spinner">
+    <mat-spinner diameter="50"></mat-spinner>
+    <p>Carregando dashboard...</p>
+  </div>
+
+  <div *ngIf="!loading" class="stats-grid">
+    <!-- Estatísticas -->
+    <mat-card class="stat-card total">
+      <mat-card-content>
+        <div class="stat-number">{{ stats.total }}</div>
+        <div class="stat-label">Total de VMs</div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card running">
+      <mat-card-content>
+        <div class="stat-number">{{ stats.running }}</div>
+        <div class="stat-label">Executando</div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card stopped">
+      <mat-card-content>
+        <div class="stat-number">{{ stats.stopped }}</div>
+        <div class="stat-label">Paradas</div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card suspended">
+      <mat-card-content>
+        <div class="stat-number">{{ stats.suspended }}</div>
+        <div class="stat-label">Suspensas</div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- VMs Recentes -->
+  <div *ngIf="!loading && vms.length > 0" class="recent-vms">
+    <h2>VMs Recentes</h2>
+    <div class="vms-grid">
+      <mat-card *ngFor="let vm of vms.slice(0, 4)" class="vm-card">
+        <mat-card-header>
+          <mat-card-title>{{ vm.nome }}</mat-card-title>
+          <mat-card-subtitle>{{ formatDate(vm.dataCriacao) }}</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <mat-chip [color]="getStatusColor(vm.status)">
+            {{ getStatusLabel(vm.status) }}
+          </mat-chip>
+          <div class="vm-resources">
+            <span>{{ vm.cpu }} CPU</span>
+            <span>{{ vm.memoria }} GB RAM</span>
+            <span>{{ vm.disco }} GB Disco</span>
+          </div>
+        </mat-card-content>
+        <mat-card-actions>
+          <button mat-button [routerLink]="['/virtual-machines/edit', vm.id]">
+            Gerenciar
+          </button>
+        </mat-card-actions>
+      </mat-card>
+    </div>
+  </div>
+
+  <div *ngIf="!loading && vms.length === 0" class="empty-state">
+    <mat-icon>dashboard</mat-icon>
+    <h3>Nenhuma máquina virtual encontrada</h3>
+    <p>Crie sua primeira VM para ver estatísticas aqui.</p>
+    <button mat-raised-button color="primary" routerLink="/virtual-machines/new">
+      <mat-icon>add</mat-icon>
+      Nova VM
+    </button>
+  </div>
+</div>

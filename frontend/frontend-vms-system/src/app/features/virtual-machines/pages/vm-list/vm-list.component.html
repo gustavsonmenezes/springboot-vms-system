@@ -1,131 +1,163 @@
-<div class="container">
-  <div class="header-actions">
-    <h1>Máquinas Virtuais</h1>
-    <button mat-raised-button color="primary" routerLink="/vms/new">
+<div class="page-container">
+  <!-- HEADER MODERNO -->
+  <div class="page-header">
+    <div class="header-content">
+      <div class="header-left">
+        <mat-icon class="header-icon">computer</mat-icon>
+        <div>
+          <h1>Máquinas Virtuais</h1>
+          <p>Total: <strong>{{ vms.length || 0 }}</strong> VMs</p>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <button mat-raised-button color="accent" routerLink="/virtual-machines/dashboard">
+          <mat-icon>dashboard</mat-icon>
+          Dashboard
+        </button>
+        <button mat-raised-button color="primary" routerLink="/virtual-machines/new">
+          <mat-icon>add</mat-icon>
+          Nova VM
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CARDS ESTATÍSTICAS -->
+  <div class="stats-row" *ngIf="!loading && vms.length > 0">
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <div class="stat-value">{{ vms.length }}</div>
+        <div class="stat-label">Total</div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card running">
+      <mat-card-content>
+        <div class="stat-value">{{ getRunningCount() }}</div>
+        <div class="stat-label">Executando</div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card warning">
+      <mat-card-content>
+        <div class="stat-value">{{ getStoppedCount() }}</div>
+        <div class="stat-label">Paradas</div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- LOADING -->
+  <div *ngIf="loading" class="loading-container">
+    <mat-spinner diameter="60"></mat-spinner>
+    <p>Carregando máquinas virtuais...</p>
+  </div>
+
+  <!-- EMPTY STATE -->
+  <div *ngIf="!loading && vms.length === 0" class="empty-state-modern">
+    <mat-icon class="empty-icon">computer</mat-icon>
+    <h2>Nenhuma VM encontrada</h2>
+    <p>Crie sua primeira máquina virtual agora mesmo!</p>
+    <button mat-raised-button color="primary" routerLink="/virtual-machines/new">
       <mat-icon>add</mat-icon>
-      Nova Máquina Virtual
+      Criar Primeira VM
     </button>
   </div>
 
-  <mat-card>
-    <mat-card-content>
-      <div *ngIf="loading" class="loading-spinner">
-        <mat-spinner diameter="50"></mat-spinner>
-        <p>Carregando máquinas virtuais...</p>
+  <!-- TABELA MODERNA -->
+  <div *ngIf="!loading && vms.length > 0" class="table-section">
+    <div class="table-header">
+      <h3>{{ vms.length }} Máquinas Virtuais</h3>
+      <div class="table-actions">
+        <mat-form-field appearance="outline" class="search-field">
+          <mat-icon matPrefix>search</mat-icon>
+          <input matInput placeholder="Buscar VMs..." [(ngModel)]="searchTerm" (input)="filterVMs()">
+        </mat-form-field>
       </div>
+    </div>
 
-      <div *ngIf="!loading && vms.length === 0" class="empty-state">
-        <mat-icon>computer</mat-icon>
-        <h3>Nenhuma máquina virtual encontrada</h3>
-        <p>Clique no botão acima para criar sua primeira máquina virtual.</p>
-      </div>
+    <div class="modern-table-container">
+      <table mat-table [dataSource]="filteredVms" class="modern-table">
 
-      <div *ngIf="!loading && vms.length > 0" class="table-container">
-        <table mat-table [dataSource]="vms" class="mat-elevation-z1">
-          <!-- Nome Column -->
-          <ng-container matColumnDef="nome">
-            <th mat-header-cell *matHeaderCellDef> Nome </th>
-            <td mat-cell *matCellDef="let vm">
-              <strong>{{ vm.nome }}</strong>
-            </td>
-          </ng-container>
+        <!-- Nome -->
+        <ng-container matColumnDef="nome">
+          <th mat-header-cell *matHeaderCellDef>
+            <mat-icon>label</mat-icon> Nome
+          </th>
+          <td mat-cell *matCellDef="let vm">
+            <div class="vm-name">
+              <mat-icon color="primary">computer</mat-icon>
+              <span>{{ vm.nome }}</span>
+            </div>
+          </td>
+        </ng-container>
 
-          <!-- CPU Column -->
-          <ng-container matColumnDef="cpu">
-            <th mat-header-cell *matHeaderCellDef> CPU </th>
-            <td mat-cell *matCellDef="let vm">
-              <span class="resource-badge">
-                <mat-icon>memory</mat-icon>
-                {{ vm.cpu }} núcleos
+        <!-- Specs -->
+        <ng-container matColumnDef="specs">
+          <th mat-header-cell *matHeaderCellDef> Especificações </th>
+          <td mat-cell *matCellDef="let vm">
+            <div class="specs-grid">
+              <span class="spec-item">
+                <mat-icon>memory</mat-icon> {{ vm.cpu }}c
               </span>
-            </td>
-          </ng-container>
-
-          <!-- Memória Column -->
-          <ng-container matColumnDef="memoria">
-            <th mat-header-cell *matHeaderCellDef> Memória </th>
-            <td mat-cell *matCellDef="let vm">
-              <span class="resource-badge">
-                <mat-icon>sd_card</mat-icon>
-                {{ vm.memoria }} GB
+              <span class="spec-item">
+                <mat-icon>sd_card</mat-icon> {{ vm.memoria }}GB
               </span>
-            </td>
-          </ng-container>
-
-          <!-- Disco Column -->
-          <ng-container matColumnDef="disco">
-            <th mat-header-cell *matHeaderCellDef> Disco </th>
-            <td mat-cell *matCellDef="let vm">
-              <span class="resource-badge">
-                <mat-icon>storage</mat-icon>
-                {{ vm.disco }} GB
+              <span class="spec-item">
+                <mat-icon>storage</mat-icon> {{ vm.disco }}GB
               </span>
-            </td>
-          </ng-container>
+            </div>
+          </td>
+        </ng-container>
 
-          <!-- Status Column -->
-          <ng-container matColumnDef="status">
-            <th mat-header-cell *matHeaderCellDef> Status </th>
-            <td mat-cell *matCellDef="let vm">
-              <mat-chip [color]="getStatusColor(vm.status)" >
-                {{ getStatusLabel(vm.status) }}
-              </mat-chip>
-            </td>
-          </ng-container>
+        <!-- Status Column (CORRIGIDO) -->
+        <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef>
+            <mat-icon>circle_notifications</mat-icon> Status
+          </th>
+          <td mat-cell *matCellDef="let vm">
+            <mat-chip [class]="'status-' + getStatusClass(vm.status)" selected>
+              {{ getStatusLabel(vm.status) }}
+            </mat-chip>
+          </td>
+        </ng-container>
 
-          <!-- Data Criação Column -->
-          <ng-container matColumnDef="dataCriacao">
-            <th mat-header-cell *matHeaderCellDef> Criada em </th>
-            <td mat-cell *matCellDef="let vm">
-              {{ formatDate(vm.dataCriacao) }}
-            </td>
-          </ng-container>
+        <!-- Data -->
+        <ng-container matColumnDef="dataCriacao">
+          <th mat-header-cell *matHeaderCellDef>
+            <mat-icon>access_time</mat-icon> Criada
+          </th>
+          <td mat-cell *matCellDef="let vm">
+            {{ formatDate(vm.dataCriacao) }}
+          </td>
+        </ng-container>
 
-          <!-- Ações Column -->
-          <ng-container matColumnDef="actions">
-            <th mat-header-cell *matHeaderCellDef> Ações </th>
-            <td mat-cell *matCellDef="let vm">
-              <div class="action-buttons">
-                <button mat-icon-button color="primary"
-                        [routerLink]="['/vms/edit', vm.id]"
-                        matTooltip="Editar">
-                  <mat-icon>edit</mat-icon>
-                </button>
+        <!-- Ações -->
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>
+            <mat-icon>more_horiz</mat-icon> Ações
+          </th>
+          <td mat-cell *matCellDef="let vm">
+            <div class="modern-actions">
+              <button mat-icon-button color="primary" [routerLink]="['/virtual-machines/edit', vm.id]" matTooltip="Editar">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button mat-icon-button
+                      [color]="vm.status === 'RUNNING' ? 'warn' : 'primary'"
+                      (click)="toggleVM(vm.id, vm.status)"
+                      matTooltip="{{ vm.status === 'RUNNING' ? 'Parar' : 'Iniciar' }}">
+                <mat-icon>{{ vm.status === 'RUNNING' ? 'stop' : 'play_arrow' }}</mat-icon>
+              </button>
+              <button mat-icon-button color="warn" (click)="deleteVm(vm.id)" matTooltip="Excluir">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          </td>
+        </ng-container>
 
-                <button mat-icon-button color="accent"
-                        (click)="changeStatus(vm.id!, 'start')"
-                        *ngIf="vm.status !== 'RUNNING'"
-                        matTooltip="Iniciar">
-                  <mat-icon>play_arrow</mat-icon>
-                </button>
-
-                <button mat-icon-button color="warn"
-                        (click)="changeStatus(vm.id!, 'stop')"
-                        *ngIf="vm.status === 'RUNNING'"
-                        matTooltip="Parar">
-                  <mat-icon>stop</mat-icon>
-                </button>
-
-                <button mat-icon-button color="default"
-                        (click)="changeStatus(vm.id!, 'suspend')"
-                        *ngIf="vm.status === 'RUNNING'"
-                        matTooltip="Suspender">
-                  <mat-icon>pause</mat-icon>
-                </button>
-
-                <button mat-icon-button color="warn"
-                        (click)="deleteVM(vm.id!)"
-                        matTooltip="Excluir">
-                  <mat-icon>delete</mat-icon>
-                </button>
-              </div>
-            </td>
-          </ng-container>
-
-          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-        </table>
-      </div>
-    </mat-card-content>
-  </mat-card>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="table-row"></tr>
+      </table>
+    </div>
+  </div>
 </div>

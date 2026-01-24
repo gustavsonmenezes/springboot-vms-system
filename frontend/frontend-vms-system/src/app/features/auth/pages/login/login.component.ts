@@ -45,21 +45,30 @@ export class LoginComponent {
 
   onSubmit(): void {
     if (this.loginForm.invalid) {
+      this.errorMessage = 'Por favor, preencha todos os campos corretamente';
       return;
     }
 
     this.loading = true;
     this.errorMessage = '';
 
+    console.log('📤 Enviando login...');
+
     this.authService.login(this.loginForm.value).subscribe({
-      next: () => {
+      next: (response) => {
+        console.log('✅ Login bem-sucedido:', response);
         this.loading = false;
-        this.router.navigate(['/vms']);
+
+        // Navegar para lista de VMs
+        this.router.navigate(['/virtual-machines/list']).then(
+          (success) => console.log('✅ Navegação sucesso:', success),
+          (error) => console.error('❌ Erro navegação:', error)
+        );
       },
       error: (error) => {
+        console.error('❌ Erro no login:', error);
         this.loading = false;
         this.errorMessage = 'Email ou senha inválidos';
-        console.error('Erro no login:', error);
       }
     });
   }

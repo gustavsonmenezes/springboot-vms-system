@@ -10,7 +10,7 @@ export const routes: Routes = [
   },
 
   {
-    path: 'vms',
+    path: 'virtual-machines',
     loadChildren: () => import('./features/virtual-machines/virtual-machines.routes')
       .then(m => m.VIRTUAL_MACHINES_ROUTES),
     canActivate: [authGuard]

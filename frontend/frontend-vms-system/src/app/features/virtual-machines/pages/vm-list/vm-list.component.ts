@@ -1,16 +1,20 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgFor, NgIf } from '@angular/common';
+import { FormsModule } from '@angular/forms'; // ← PARA ngModel
 import { RouterModule } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table';
-import { MatChipsModule } from '@angular/material/chips';
+import { MatChipsModule } from '@angular/material/chips'; // ← PARA chip-list
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatFormFieldModule } from '@angular/material/form-field'; // ← PARA mat-form-field
+import { MatInputModule } from '@angular/material/input'; // ← PARA input
 import { ToastrService } from 'ngx-toastr';
 import { VirtualMachineService } from '../../services/vm.service';
 import { VirtualMachine, VMStatus } from '../../../../shared/models/virtual-machine.model';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-vm-list',
@@ -19,26 +23,30 @@ import { VirtualMachine, VMStatus } from '../../../../shared/models/virtual-mach
   standalone: true,
   imports: [
     CommonModule,
+    FormsModule, // ← NOVO
     RouterModule,
     MatCardModule,
     MatButtonModule,
     MatIconModule,
     MatTableModule,
-    MatChipsModule,
+    MatChipsModule, // ← NOVO
     MatProgressSpinnerModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatFormFieldModule, // ← NOVO
+    MatInputModule // ← NOVO
   ]
 })
 export class VmListComponent implements OnInit {
   vms: VirtualMachine[] = [];
-  displayedColumns: string[] = [
-    'nome', 'cpu', 'memoria', 'disco', 'status', 'dataCriacao', 'actions'
-  ];
+  filteredVms: VirtualMachine[] = [];
+  searchTerm = '';
+  displayedColumns: string[] = ['nome', 'specs', 'status', 'dataCriacao', 'actions'];
   loading = true;
 
   constructor(
     private vmService: VirtualMachineService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -50,6 +58,7 @@ export class VmListComponent implements OnInit {
     this.vmService.getAllVMs().subscribe({
       next: (data) => {
         this.vms = data;
+        this.filteredVms = [...this.vms];
         this.loading = false;
       },
       error: (error) => {
@@ -60,7 +69,83 @@ export class VmListComponent implements OnInit {
     });
   }
 
-  deleteVM(id: number): void {
+  filterVMs(): void {
+    this.filteredVms = this.vms.filter(vm =>
+      vm.nome.toLowerCase().includes(this.searchTerm.toLowerCase())
+    );
+  }
+
+  getRunningCount(): number {
+    return this.vms.filter(vm => vm.status === VMStatus.RUNNING).length;
+  }
+
+  getStoppedCount(): number {
+    return this.vms.filter(vm => vm.status === VMStatus.STOPPED).length;
+  }
+
+  getStatusClass(status: VMStatus): string {
+    return status.toLowerCase();
+  }
+
+  getStatusLabel(status: VMStatus): string {
+    const statusLabels: Record<VMStatus, string> = {
+      [VMStatus.CREATED]: 'Criada',
+      [VMStatus.RUNNING]: 'Executando',
+      [VMStatus.STOPPED]: 'Parada',
+      [VMStatus.SUSPENDED]: 'Suspensa'
+    };
+    return statusLabels[status] || status;
+  }
+
+  toggleVM(id: number, status: VMStatus): void {
+    if (status === VMStatus.RUNNING) {
+      this.stopVm(id);
+    } else {
+      this.startVm(id);
+    }
+  }
+
+  // ====== MÉTODOS EXISTENTES (mantidos) ======
+  startVm(id: number): void {
+    this.vmService.changeVMStatus(id, 'start').subscribe({
+      next: () => {
+        this.toastr.success('Máquina iniciada com sucesso!');
+        this.loadVMs();
+      },
+      error: (error) => {
+        this.toastr.error('Erro ao iniciar máquina');
+        console.error('Error starting VM:', error);
+      }
+    });
+  }
+
+  stopVm(id: number): void {
+    this.vmService.changeVMStatus(id, 'stop').subscribe({
+      next: () => {
+        this.toastr.success('Máquina parada com sucesso!');
+        this.loadVMs();
+      },
+      error: (error) => {
+        this.toastr.error('Erro ao parar máquina');
+        console.error('Error stopping VM:', error);
+      }
+    });
+  }
+
+  suspendVm(id: number): void {
+    this.vmService.changeVMStatus(id, 'suspend').subscribe({
+      next: () => {
+        this.toastr.success('Máquina suspensa com sucesso!');
+        this.loadVMs();
+      },
+      error: (error) => {
+        this.toastr.error('Erro ao suspender máquina');
+        console.error('Error suspending VM:', error);
+      }
+    });
+  }
+
+  deleteVm(id: number): void {
     if (confirm('Tem certeza que deseja excluir esta máquina virtual?')) {
       this.vmService.deleteVM(id).subscribe({
         next: () => {
@@ -73,39 +158,6 @@ export class VmListComponent implements OnInit {
         }
       });
     }
-  }
-
-  changeStatus(vmId: number, action: 'start' | 'stop' | 'suspend'): void {
-    this.vmService.changeVMStatus(vmId, action).subscribe({
-      next: () => {
-        this.toastr.success(`Máquina ${action === 'start' ? 'iniciada' : action === 'stop' ? 'parada' : 'suspensa'} com sucesso!`);
-        this.loadVMs();
-      },
-      error: (error) => {
-        this.toastr.error(`Erro ao ${action} máquina`);
-        console.error(`Error ${action} VM:`, error);
-      }
-    });
-  }
-
-  getStatusColor(status: VMStatus): string {
-    const statusColors: Record<VMStatus, string> = {
-      [VMStatus.CREATED]: 'primary',
-      [VMStatus.RUNNING]: 'success',
-      [VMStatus.STOPPED]: 'warning',
-      [VMStatus.SUSPENDED]: 'default'
-    };
-    return statusColors[status] || 'default';
-  }
-
-  getStatusLabel(status: VMStatus): string {
-    const statusLabels: Record<VMStatus, string> = {
-      [VMStatus.CREATED]: 'Criada',
-      [VMStatus.RUNNING]: 'Executando',
-      [VMStatus.STOPPED]: 'Parada',
-      [VMStatus.SUSPENDED]: 'Suspensa'
-    };
-    return statusLabels[status] || status;
   }
 
   formatDate(date: Date | string | undefined): string {
